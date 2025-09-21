@@ -1,0 +1,1 @@
+& pod trunk push ./client/CloudmersiveNLPApiClient.podspec --allow-warnings

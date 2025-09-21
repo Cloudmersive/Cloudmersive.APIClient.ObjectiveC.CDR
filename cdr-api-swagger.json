@@ -1,0 +1,80 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "CDR API",
+    "description": "Use the Content Disarm and Reconstruction API to remove security risks from documents by tearing them down, removing unsafe content and rebuilding them.",
+    "termsOfService": "https://portal.cloudmersive.com/terms-of-service",
+    "version": "v1"
+  },
+  "host": "api.cloudmersive.com",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/cdr/sanitization/file": {
+      "post": {
+        "tags": [
+          "FileSanitization"
+        ],
+        "summary": "Complete Content Disarm and Reconstruction on an Input File, and output in same file format",
+        "description": "Processes the input file via CDR to produce a secured output file.  Input content is parsed, disarmed, and then reconstructed into a new output file with the same file format as the input.",
+        "operationId": "File",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "InputFile",
+            "description": "Input document, or photos of a document, to extract data from",
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/cdr/sanitization/file/to/pdf": {
+      "post": {
+        "tags": [
+          "FileSanitization"
+        ],
+        "summary": "Complete Content Disarm and Reconstruction on an Input File with PDF/A Output",
+        "description": "Processes the input file via CDR to produce a secured PDF/A output file.  Input content is parsed, disarmed, and then reconstructed into a new PDF/A output file.",
+        "operationId": "FileToPdf",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "InputFile",
+            "description": "Input document, or photos of a document, to extract data from",
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "Apikey": {
+      "type": "apiKey",
+      "name": "Apikey",
+      "in": "header",
+      "description": "API Key Authentication"
+    }
+  },
+  "security": [
+    {
+      "Apikey": [ ]
+    }
+  ]
+}
