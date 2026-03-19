@@ -16,11 +16,14 @@
         "tags": [
           "FileSanitization"
         ],
-        "summary": "Complete Content Disarm and Reconstruction on an Input File, and output in same file format",
+        "summary": "Content Disarm and Reconstruction on a File",
         "description": "Processes the input file via CDR to produce a secured output file.  Input content is parsed, disarmed, and then reconstructed into a new output file with the same file format as the input.",
         "operationId": "File",
         "consumes": [
           "multipart/form-data"
+        ],
+        "produces": [
+          "application/octet-stream"
         ],
         "parameters": [
           {
@@ -32,7 +35,222 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "schema": {
+              "format": "binary",
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/cdr/sanitization/file/advanced": {
+      "post": {
+        "tags": [
+          "FileSanitization"
+        ],
+        "summary": "Advanced Content Disarm and Reconstruction on a File",
+        "description": "Processes the input file via CDR to produce a secured output file with advanced scan options and response headers containing scan metadata.",
+        "operationId": "FileAdvanced",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/octet-stream"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "allowExecutables",
+            "description": "Set to false to block executable files (EXE, DLL, etc.)",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowInvalidFiles",
+            "description": "Set to false to block files that are not valid for their detected type",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowScripts",
+            "description": "Set to false to block script files. PDF and Office macro sanitization still runs regardless.",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowPasswordProtectedFiles",
+            "description": "Set to false to block password-protected files",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowMacros",
+            "description": "Set to false to block files containing macros. Office macro removal still runs regardless.",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowXmlExternalEntities",
+            "description": "Set to false to block XML files with external entity references (XXE)",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowInsecureDeserialization",
+            "description": "Set to false to block files with insecure deserialization patterns",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowHtml",
+            "description": "Set to false to block HTML files",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowUnsafeArchives",
+            "description": "Set to false to block archive files flagged as unsafe (e.g., zip bombs)",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowOleEmbeddedObject",
+            "description": "Set to false to block files with embedded OLE objects",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowUnwantedAction",
+            "description": "Set to false to block files with unwanted actions",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "restrictFileTypes",
+            "description": "Comma-separated list of allowed file extensions (e.g., \".pdf,.docx,.xlsx\"). Files not matching will be blocked.",
+            "type": "string"
+          },
+          {
+            "in": "formData",
+            "name": "InputFile",
+            "description": "Input document to CDR process",
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "format": "binary",
+              "type": "string"
+            },
+            "headers": {
+              "X-CDR-CleanResult": {
+                "description": "Whether the file passed the virus scan",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsExecutable": {
+                "description": "File contains executable content",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsInvalidFile": {
+                "description": "File is invalid for its detected type",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsScript": {
+                "description": "File contains scripts",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsPasswordProtectedFile": {
+                "description": "File is password-protected",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsRestrictedFileFormat": {
+                "description": "File is a restricted format",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsMacros": {
+                "description": "File contains macros",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsXmlExternalEntities": {
+                "description": "File has XXE references",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsInsecureDeserialization": {
+                "description": "File has insecure deserialization",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsHtml": {
+                "description": "File contains HTML",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsUnsafeArchive": {
+                "description": "File is an unsafe archive",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsOleEmbeddedObject": {
+                "description": "File has OLE embedded objects",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsUnwantedAction": {
+                "description": "File has unwanted actions",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsJSON": {
+                "description": "File contains JSON",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsXML": {
+                "description": "File contains XML",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsImage": {
+                "description": "File contains images",
+                "type": "boolean"
+              },
+              "X-CDR-IsAuthenticodeSigned": {
+                "description": "File is Authenticode signed",
+                "type": "boolean"
+              },
+              "X-CDR-VerifiedFileFormat": {
+                "description": "Detected file format (e.g., .docx)",
+                "type": "string"
+              },
+              "X-CDR-FoundViruses": {
+                "description": "JSON array of found virus names, or empty if clean",
+                "type": "string"
+              },
+              "X-CDR-HashSHA1": {
+                "description": "SHA1 hash of the input file",
+                "type": "string"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
           }
         }
       }
@@ -42,11 +260,14 @@
         "tags": [
           "FileSanitization"
         ],
-        "summary": "Complete Content Disarm and Reconstruction on an Input File with PDF/A Output",
+        "summary": "Content Disarm and Reconstruction on a File with PDFA Output",
         "description": "Processes the input file via CDR to produce a secured PDF/A output file.  Input content is parsed, disarmed, and then reconstructed into a new PDF/A output file.",
         "operationId": "FileToPdf",
         "consumes": [
           "multipart/form-data"
+        ],
+        "produces": [
+          "application/octet-stream"
         ],
         "parameters": [
           {
@@ -58,10 +279,249 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "schema": {
+              "format": "binary",
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
           }
         }
       }
+    },
+    "/cdr/sanitization/file/to/pdf/advanced": {
+      "post": {
+        "tags": [
+          "FileSanitization"
+        ],
+        "summary": "Advanced Content Disarm and Reconstruction on a File with PDFA Output",
+        "description": "Processes the input file via CDR to produce a secured PDF/A output file with advanced scan options and response headers containing scan metadata.",
+        "operationId": "FileToPdfAdvanced",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/octet-stream"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "allowExecutables",
+            "description": "Set to false to block executable files (EXE, DLL, etc.)",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowInvalidFiles",
+            "description": "Set to false to block files that are not valid for their detected type",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowScripts",
+            "description": "Set to false to block script files. PDF and Office macro sanitization still runs regardless.",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowPasswordProtectedFiles",
+            "description": "Set to false to block password-protected files",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowMacros",
+            "description": "Set to false to block files containing macros. Office macro removal still runs regardless.",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowXmlExternalEntities",
+            "description": "Set to false to block XML files with external entity references (XXE)",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowInsecureDeserialization",
+            "description": "Set to false to block files with insecure deserialization patterns",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowHtml",
+            "description": "Set to false to block HTML files",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowUnsafeArchives",
+            "description": "Set to false to block archive files flagged as unsafe (e.g., zip bombs)",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowOleEmbeddedObject",
+            "description": "Set to false to block files with embedded OLE objects",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "allowUnwantedAction",
+            "description": "Set to false to block files with unwanted actions",
+            "type": "boolean"
+          },
+          {
+            "in": "header",
+            "name": "restrictFileTypes",
+            "description": "Comma-separated list of allowed file extensions (e.g., \".pdf,.docx,.xlsx\"). Files not matching will be blocked.",
+            "type": "string"
+          },
+          {
+            "in": "formData",
+            "name": "InputFile",
+            "description": "Input document to CDR process",
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "format": "binary",
+              "type": "string"
+            },
+            "headers": {
+              "X-CDR-CleanResult": {
+                "description": "Whether the file passed the virus scan",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsExecutable": {
+                "description": "File contains executable content",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsInvalidFile": {
+                "description": "File is invalid for its detected type",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsScript": {
+                "description": "File contains scripts",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsPasswordProtectedFile": {
+                "description": "File is password-protected",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsRestrictedFileFormat": {
+                "description": "File is a restricted format",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsMacros": {
+                "description": "File contains macros",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsXmlExternalEntities": {
+                "description": "File has XXE references",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsInsecureDeserialization": {
+                "description": "File has insecure deserialization",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsHtml": {
+                "description": "File contains HTML",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsUnsafeArchive": {
+                "description": "File is an unsafe archive",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsOleEmbeddedObject": {
+                "description": "File has OLE embedded objects",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsUnwantedAction": {
+                "description": "File has unwanted actions",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsJSON": {
+                "description": "File contains JSON",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsXML": {
+                "description": "File contains XML",
+                "type": "boolean"
+              },
+              "X-CDR-ContainsImage": {
+                "description": "File contains images",
+                "type": "boolean"
+              },
+              "X-CDR-IsAuthenticodeSigned": {
+                "description": "File is Authenticode signed",
+                "type": "boolean"
+              },
+              "X-CDR-VerifiedFileFormat": {
+                "description": "Detected file format (e.g., .docx)",
+                "type": "string"
+              },
+              "X-CDR-FoundViruses": {
+                "description": "JSON array of found virus names, or empty if clean",
+                "type": "string"
+              },
+              "X-CDR-HashSHA1": {
+                "description": "SHA1 hash of the input file",
+                "type": "string"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ProblemDetails": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "status": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "detail": {
+          "type": "string"
+        },
+        "instance": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": { }
     }
   },
   "securityDefinitions": {

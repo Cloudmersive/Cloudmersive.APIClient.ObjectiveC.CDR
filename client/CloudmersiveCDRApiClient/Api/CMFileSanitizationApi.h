@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import "CMProblemDetails.h"
 #import "CMApi.h"
 
 /**
@@ -22,28 +23,108 @@ extern NSInteger kCMFileSanitizationApiMissingParamErrorCode;
 
 -(instancetype) initWithApiClient:(CMApiClient *)apiClient NS_DESIGNATED_INITIALIZER;
 
-/// Complete Content Disarm and Reconstruction on an Input File, and output in same file format
+/// Content Disarm and Reconstruction on a File
 /// Processes the input file via CDR to produce a secured output file.  Input content is parsed, disarmed, and then reconstructed into a new output file with the same file format as the input.
 ///
 /// @param inputFile Input document, or photos of a document, to extract data from (optional)
 /// 
-///  code:200 message:"OK"
+///  code:200 message:"OK",
+///  code:400 message:"Bad Request",
+///  code:401 message:"Unauthorized"
 ///
-/// @return void
+/// @return NSData*
 -(NSURLSessionTask*) fileWithInputFile: (NSURL*) inputFile
-    completionHandler: (void (^)(NSError* error)) handler;
+    completionHandler: (void (^)(NSData* output, NSError* error)) handler;
 
 
-/// Complete Content Disarm and Reconstruction on an Input File with PDF/A Output
+/// Advanced Content Disarm and Reconstruction on a File
+/// Processes the input file via CDR to produce a secured output file with advanced scan options and response headers containing scan metadata.
+///
+/// @param allowExecutables Set to false to block executable files (EXE, DLL, etc.) (optional)
+/// @param allowInvalidFiles Set to false to block files that are not valid for their detected type (optional)
+/// @param allowScripts Set to false to block script files. PDF and Office macro sanitization still runs regardless. (optional)
+/// @param allowPasswordProtectedFiles Set to false to block password-protected files (optional)
+/// @param allowMacros Set to false to block files containing macros. Office macro removal still runs regardless. (optional)
+/// @param allowXmlExternalEntities Set to false to block XML files with external entity references (XXE) (optional)
+/// @param allowInsecureDeserialization Set to false to block files with insecure deserialization patterns (optional)
+/// @param allowHtml Set to false to block HTML files (optional)
+/// @param allowUnsafeArchives Set to false to block archive files flagged as unsafe (e.g., zip bombs) (optional)
+/// @param allowOleEmbeddedObject Set to false to block files with embedded OLE objects (optional)
+/// @param allowUnwantedAction Set to false to block files with unwanted actions (optional)
+/// @param restrictFileTypes Comma-separated list of allowed file extensions (e.g., \&quot;.pdf,.docx,.xlsx\&quot;). Files not matching will be blocked. (optional)
+/// @param inputFile Input document to CDR process (optional)
+/// 
+///  code:200 message:"OK",
+///  code:400 message:"Bad Request",
+///  code:401 message:"Unauthorized"
+///
+/// @return NSData*
+-(NSURLSessionTask*) fileAdvancedWithAllowExecutables: (NSNumber*) allowExecutables
+    allowInvalidFiles: (NSNumber*) allowInvalidFiles
+    allowScripts: (NSNumber*) allowScripts
+    allowPasswordProtectedFiles: (NSNumber*) allowPasswordProtectedFiles
+    allowMacros: (NSNumber*) allowMacros
+    allowXmlExternalEntities: (NSNumber*) allowXmlExternalEntities
+    allowInsecureDeserialization: (NSNumber*) allowInsecureDeserialization
+    allowHtml: (NSNumber*) allowHtml
+    allowUnsafeArchives: (NSNumber*) allowUnsafeArchives
+    allowOleEmbeddedObject: (NSNumber*) allowOleEmbeddedObject
+    allowUnwantedAction: (NSNumber*) allowUnwantedAction
+    restrictFileTypes: (NSString*) restrictFileTypes
+    inputFile: (NSURL*) inputFile
+    completionHandler: (void (^)(NSData* output, NSError* error)) handler;
+
+
+/// Content Disarm and Reconstruction on a File with PDFA Output
 /// Processes the input file via CDR to produce a secured PDF/A output file.  Input content is parsed, disarmed, and then reconstructed into a new PDF/A output file.
 ///
 /// @param inputFile Input document, or photos of a document, to extract data from (optional)
 /// 
-///  code:200 message:"OK"
+///  code:200 message:"OK",
+///  code:400 message:"Bad Request",
+///  code:401 message:"Unauthorized"
 ///
-/// @return void
+/// @return NSData*
 -(NSURLSessionTask*) fileToPdfWithInputFile: (NSURL*) inputFile
-    completionHandler: (void (^)(NSError* error)) handler;
+    completionHandler: (void (^)(NSData* output, NSError* error)) handler;
+
+
+/// Advanced Content Disarm and Reconstruction on a File with PDFA Output
+/// Processes the input file via CDR to produce a secured PDF/A output file with advanced scan options and response headers containing scan metadata.
+///
+/// @param allowExecutables Set to false to block executable files (EXE, DLL, etc.) (optional)
+/// @param allowInvalidFiles Set to false to block files that are not valid for their detected type (optional)
+/// @param allowScripts Set to false to block script files. PDF and Office macro sanitization still runs regardless. (optional)
+/// @param allowPasswordProtectedFiles Set to false to block password-protected files (optional)
+/// @param allowMacros Set to false to block files containing macros. Office macro removal still runs regardless. (optional)
+/// @param allowXmlExternalEntities Set to false to block XML files with external entity references (XXE) (optional)
+/// @param allowInsecureDeserialization Set to false to block files with insecure deserialization patterns (optional)
+/// @param allowHtml Set to false to block HTML files (optional)
+/// @param allowUnsafeArchives Set to false to block archive files flagged as unsafe (e.g., zip bombs) (optional)
+/// @param allowOleEmbeddedObject Set to false to block files with embedded OLE objects (optional)
+/// @param allowUnwantedAction Set to false to block files with unwanted actions (optional)
+/// @param restrictFileTypes Comma-separated list of allowed file extensions (e.g., \&quot;.pdf,.docx,.xlsx\&quot;). Files not matching will be blocked. (optional)
+/// @param inputFile Input document to CDR process (optional)
+/// 
+///  code:200 message:"OK",
+///  code:400 message:"Bad Request",
+///  code:401 message:"Unauthorized"
+///
+/// @return NSData*
+-(NSURLSessionTask*) fileToPdfAdvancedWithAllowExecutables: (NSNumber*) allowExecutables
+    allowInvalidFiles: (NSNumber*) allowInvalidFiles
+    allowScripts: (NSNumber*) allowScripts
+    allowPasswordProtectedFiles: (NSNumber*) allowPasswordProtectedFiles
+    allowMacros: (NSNumber*) allowMacros
+    allowXmlExternalEntities: (NSNumber*) allowXmlExternalEntities
+    allowInsecureDeserialization: (NSNumber*) allowInsecureDeserialization
+    allowHtml: (NSNumber*) allowHtml
+    allowUnsafeArchives: (NSNumber*) allowUnsafeArchives
+    allowOleEmbeddedObject: (NSNumber*) allowOleEmbeddedObject
+    allowUnwantedAction: (NSNumber*) allowUnwantedAction
+    restrictFileTypes: (NSString*) restrictFileTypes
+    inputFile: (NSURL*) inputFile
+    completionHandler: (void (^)(NSData* output, NSError* error)) handler;
 
 
 

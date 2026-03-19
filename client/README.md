@@ -41,6 +41,7 @@ Import the following:
 #import <CloudmersiveCDRApiClient/CMApiClient.h>
 #import <CloudmersiveCDRApiClient/CMDefaultConfiguration.h>
 // load models
+#import <CloudmersiveCDRApiClient/CMProblemDetails.h>
 // load API classes for accessing endpoints
 #import <CloudmersiveCDRApiClient/CMFileSanitizationApi.h>
 
@@ -68,9 +69,12 @@ NSURL* *inputFile = [NSURL fileURLWithPath:@"/path/to/file.txt"]; // Input docum
 
 CMFileSanitizationApi *apiInstance = [[CMFileSanitizationApi alloc] init];
 
-// Complete Content Disarm and Reconstruction on an Input File, and output in same file format
+// Content Disarm and Reconstruction on a File
 [apiInstance fileWithInputFile:inputFile
-              completionHandler: ^(NSError* error) {
+              completionHandler: ^(NSData* output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
                             if (error) {
                                 NSLog(@"Error: %@", error);
                             }
@@ -84,12 +88,15 @@ All URIs are relative to *https://api.cloudmersive.com*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*CMFileSanitizationApi* | [**file**](docs/CMFileSanitizationApi.md#file) | **POST** /cdr/sanitization/file | Complete Content Disarm and Reconstruction on an Input File, and output in same file format
-*CMFileSanitizationApi* | [**fileToPdf**](docs/CMFileSanitizationApi.md#filetopdf) | **POST** /cdr/sanitization/file/to/pdf | Complete Content Disarm and Reconstruction on an Input File with PDF/A Output
+*CMFileSanitizationApi* | [**file**](docs/CMFileSanitizationApi.md#file) | **POST** /cdr/sanitization/file | Content Disarm and Reconstruction on a File
+*CMFileSanitizationApi* | [**fileAdvanced**](docs/CMFileSanitizationApi.md#fileadvanced) | **POST** /cdr/sanitization/file/advanced | Advanced Content Disarm and Reconstruction on a File
+*CMFileSanitizationApi* | [**fileToPdf**](docs/CMFileSanitizationApi.md#filetopdf) | **POST** /cdr/sanitization/file/to/pdf | Content Disarm and Reconstruction on a File with PDFA Output
+*CMFileSanitizationApi* | [**fileToPdfAdvanced**](docs/CMFileSanitizationApi.md#filetopdfadvanced) | **POST** /cdr/sanitization/file/to/pdf/advanced | Advanced Content Disarm and Reconstruction on a File with PDFA Output
 
 
 ## Documentation For Models
 
+ - [CMProblemDetails](docs/CMProblemDetails.md)
 
 
 ## Documentation For Authorization
